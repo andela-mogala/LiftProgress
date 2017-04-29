@@ -1,3 +1,5 @@
+coefficients: { 1: 1, 2: .943, 3: .906, 4: .881, 5: .851, 6: .831, 7: .807, 8: .786, 9: .765, 10: .744 }
+
 @LiftForm = React.createClass
   getInitialState: ->
     date: ''
@@ -6,11 +8,10 @@
     weight_lifted: ''
     reps_performed: ''
     one_rm: 0
-    coefficients: { 1: 1, 2: .943, 3: .906, 4: .881, 5: .851, 6: .831, 7: .807, 8: .786, 9: .765, 10: .744 }
 
   calculateOneRm: ->
     if @state.weight_lifted and @state.reps_performed
-      @state.one_rm = @state.weight_lifted / @state.coefficients[@state.reps_performed]
+      @state.one_rm = @state.weight_lifted / coefficients[@state.reps_performed]
     else
       0
 
@@ -45,6 +46,8 @@
           name: 'date'
           value: @state.date
           onChange: @handleValueChange
+      React.DOM.div
+        className: 'form-group'
         React.DOM.input
           type: 'text'
           className: 'form-control'
@@ -52,10 +55,14 @@
           name: 'lift_name'
           value: @state.lift_name
           onChange: @handleValueChange
+      React.DOM.div
+        className: 'form-group'
         React.DOM.a
           className: 'btn btn-primary'
           onClick: @toggleUnit
           'Metric ' + @state.is_metric.toString()
+      React.DOM.div
+        className: 'form-group'
         React.DOM.input
           type: 'number'
           className: 'form-control'
@@ -63,6 +70,8 @@
           name: 'weight_lifted'
           value: @state.weight_lifted
           onChange: @handleValueChange
+      React.DOM.div
+        className: 'form-group'
         React.DOM.input
           type: 'number'
           min: 1

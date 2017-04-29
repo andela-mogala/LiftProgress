@@ -10,6 +10,12 @@
     lifts.push lift
     @setState lifts: lifts
 
+  deleteLift: (lift) ->
+    lifts = @state.lifts.slice()
+    index = lifts.indexOf lift
+    lifts.splice index, 1
+    @replaceState lifts: lifts
+
   render: ->
     React.DOM.div
       className: 'lifts'
@@ -27,6 +33,7 @@
             React.DOM.th null, 'Metric ?'
             React.DOM.th null, 'Reps Performed'
             React.DOM.th null, '1 RM'
+            React.DOM.th null, 'Actions'
         React.DOM.tbody null,
           for lift in @state.lifts
-            React.createElement Lift, key: lift.id, lift: lift
+            React.createElement Lift, key: lift.id, lift: lift, handleDeleteLift: @deleteLift
