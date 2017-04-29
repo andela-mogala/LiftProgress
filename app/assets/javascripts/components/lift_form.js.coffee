@@ -2,17 +2,28 @@
   getInitialState: ->
     date: ''
     lift_name: ''
-    is_metric: ''
+    is_metric: false
     weight_lifted: ''
     reps_performed: ''
-    one_rm: ''
+    one_rm: 0
+    coefficients: { 1: 1, 2: .943, 3: .906, 4: .881, 5: .851, 6: .831, 7: .807, 8: .786, 9: .765, 10: .744 }
+
+  calculateOneRm: ->
+    if @state.weight_lifted and @state.reps_performed
+      @state.one_rm = @state.weight_lifted / @state.coefficients[@state.reps_performed]
+    else
+      0
 
   handleValueChange: (e) ->
     valueName = e.target.name
     @setState "#{ valueName }": e.target.value
 
+  toggleUnit: (e) ->
+    e.preventDefault()
+    @setState is_metric: !@state.is_metric
+
   valid: ->
-    @state.date && @state.lift_name && @state.is_metric && @state.weight_lifted && @state.reps_performed && @state.one_rm
+    @state.date && @state.lift_name && @state.weight_lifted && @state.reps_performed && @state.one_rm
 
   handleSubmit: (e) ->
     e.preventDefault()
@@ -41,13 +52,10 @@
           name: 'lift_name'
           value: @state.lift_name
           onChange: @handleValueChange
-        React.DOM.input
-          type: 'boolean'
-          className: 'form-control'
-          placeholder: 'is_metric'
-          name: 'is_metric'
-          value: @state.is_metric
-          onChange: @handleValueChange
+        React.DOM.a
+          className: 'btn btn-primary'
+          onClick: @toggleUnit
+          'Metric ' + @state.is_metric.toString()
         React.DOM.input
           type: 'number'
           className: 'form-control'
@@ -57,20 +65,16 @@
           onChange: @handleValueChange
         React.DOM.input
           type: 'number'
+          min: 1
+          max: 10
           className: 'form-control'
           placeholder: 'reps_performed'
           name: 'reps_performed'
           value: @state.reps_performed
-          onChange: @handleValueChange
-        React.DOM.input
-          type: 'number'
-          className: 'form-control'
-          placeholder: 'one_rm'
-          name: 'one_rm'
-          value: @state.one_rm
           onChange: @handleValueChange
         React.DOM.button
           type: 'submit'
           className: 'btn btn-primary'
           disabled: !@valid()
           'Create Lift'
+        React.createElement OneRmBox, one_rm: @calculateOneRm()
